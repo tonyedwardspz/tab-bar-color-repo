@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:TabBarColorRepro"
+       x:Class="TabBarColorRepro.AppShell"
+       FlyoutBehavior="Disabled"
+       Shell.BackgroundColor="{StaticResource TabBackground}"
+       Shell.TitleColor="#182230">
+    <TabBar Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+            Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+            Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+            Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+            Shell.TabBarDisabledColor="{StaticResource Gray300}">
+        <ShellContent Title="Home" Icon="tab_home.png" Route="home"
+                      ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent Title="Activity" Icon="tab_activity.png" Route="activity"
+                      ContentTemplate="{DataTemplate local:ActivityPage}" />
+        <ShellContent Title="Settings" Icon="tab_settings.png" Route="settings"
+                      ContentTemplate="{DataTemplate local:SettingsPage}" />
+    </TabBar>
+</Shell>

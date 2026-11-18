@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Override these to compare the same source on MAUI 10. -->
+    <ReproFrameworkVersion Condition="'$(ReproFrameworkVersion)' == ''">11.0</ReproFrameworkVersion>
+    <MauiVersion Condition="'$(MauiVersion)' == '' and '$(ReproFrameworkVersion)' == '11.0'">11.0.0</MauiVersion>
+    <MauiVersion Condition="'$(MauiVersion)' == '' and '$(ReproFrameworkVersion)' == '10.0'">10.0.20</MauiVersion>
+    <ReproHost Condition="'$(ReproHost)' == ''">Shell</ReproHost>
+    <DefineConstants Condition="'$(ReproHost)' == 'TabbedPage'">$(DefineConstants);TABBED_PAGE</DefineConstants>
+    <TargetFrameworks>net$(ReproFrameworkVersion)-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net$(ReproFrameworkVersion)-windows10.0.19041.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TabBarColorRepro</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <!-- Produce an APK that can be installed directly without IDE fast deployment. -->
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationTitle>Tab Color Repro</ApplicationTitle>
+    <ApplicationId>com.example.tabbarcolorrepro</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <WindowsPackageType>None</WindowsPackageType>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <MauiIcon Include="Resources/AppIcon/appicon.svg" ForegroundFile="Resources/AppIcon/appiconfg.svg" Color="#F58220" />
+    <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#FFFFFF" BaseSize="128,128" />
+    <MauiImage Include="Resources/Images/*" BaseSize="24,24" />
+    <MauiFont Include="Resources/Fonts/*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+  </ItemGroup>
+  <Target Name="ValidateReproHost" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(ReproHost)' != 'Shell' and '$(ReproHost)' != 'TabbedPage'" Text="ReproHost must be Shell or TabbedPage." />
+  </Target>
+</Project>
