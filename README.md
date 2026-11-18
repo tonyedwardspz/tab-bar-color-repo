@@ -2,7 +2,17 @@
 
 A .NET MAUI sample investigating an Android regression reported when moving from MAUI 10 to 11: the selected bottom-tab icon initially uses a native theme color instead of the configured orange. After navigation, the icon becomes orange. Windows reportedly behaves correctly.
 
-The current sample uses **Shell**, **.NET 11**, and **MAUI Controls 11.0.0**. It restores the standard Android template colors and deliberately delays the Home icon load to exercise a suspected initialization race. During testing on a Pixel 8a running Android 17, the user reported that this setup reproduced the issue. Some earlier runs remained orange, so reproduction may depend on timing or theme.
+The current sample uses **Shell**, **.NET 11**, and **MAUI Controls 11.0.0**. It restores the standard Android template colors and deliberately delays the Home icon load to exercise a suspected initialization race. The issue was reproduced and captured on a Pixel 8a running Android 17 in light mode: the selected Home icon is purple on cold launch while its label is orange; after switching to Activity and back, the Home icon becomes orange. Some earlier runs remained orange, so reproduction may depend on timing or theme.
+
+## Reproduced issue: before and after navigation
+
+Captured from the same run of the current sample on a **Pixel 8a / Android 17**, in **light mode**, using **MAUI 11.0.0**, the **1800 ms Home icon delay**, and the **default purple Android theme colors**. No app color changes were made between captures.
+
+| Cold launch: incorrect purple Home icon | After Activity → Home: correct orange Home icon |
+| --- | --- |
+| <img src="docs/screenshots/shell-repro-cold-launch.png" alt="Cold launch: selected Home icon is purple, while the Home label and expected tint swatch are orange" width="320"> | <img src="docs/screenshots/shell-repro-after-navigation.png" alt="After switching to Activity and back: selected Home icon is now orange, matching its label and the expected tint swatch" width="320"> |
+
+The **bottom Home icon** changes from purple to orange. The Home label is already orange in the failing capture. The purple system status bar remains purple in both captures and is separate from the tab icon issue.
 
 ## Build and run
 
@@ -95,7 +105,7 @@ dotnet build -t:Run -f net11.0-android -p:IconLoadDelayMs=3000
 adb -s YOUR_DEVICE_SERIAL logcat -s TabTintRepro:I
 ```
 
-Device logs confirmed that Activity and Settings completed before Home, with Home completing approximately 1.8 seconds later. The delayed sample and restored default Android colors were built and installed successfully before the user reported reproduction. A captured before/after pair for the failing run is still pending.
+Device logs confirmed that Activity and Settings completed before Home, with Home completing approximately 1.8 seconds later. The before/after screenshots above confirm the visible failure with the delayed sample and restored default Android colors: a purple Home icon on cold launch becomes orange after tab navigation.
 
 ## Suspected cause and reported workarounds
 
@@ -151,15 +161,3 @@ dotnet build -t:Run -f net11.0-windows10.0.19041.0
 ```
 
 The initial Android .NET 10 baseline and .NET 11 Shell/TabbedPage builds passed. The current delayed-icon .NET 11 Android build passed with zero warnings/errors and launched on the Pixel. The current delayed setup has not been validated on .NET 10 or Windows.
-
-## Earlier screenshots
-
-These screenshots predate the delay experiment and restoration of the standard Android template colors. They show earlier passing runs with blue native theme overrides; they are not screenshots of the reproduced failure.
-
-| Light: cold launch | Light: after navigation |
-| --- | --- |
-| <img src="docs/screenshots/shell-home-light-cold-launch.png" alt="Earlier light-theme run: Home icon orange on cold launch" width="260"> | <img src="docs/screenshots/shell-activity-light-after-navigation.png" alt="Earlier light-theme run: Activity icon orange after navigation" width="260"> |
-
-| Dark: cold launch | Dark: after navigation |
-| --- | --- |
-| <img src="docs/screenshots/shell-home-dark-cold-launch.png" alt="Earlier dark-theme run: Home icon orange on cold launch" width="260"> | <img src="docs/screenshots/shell-activity-dark-after-navigation.png" alt="Earlier dark-theme run: Activity icon orange after navigation" width="260"> |
