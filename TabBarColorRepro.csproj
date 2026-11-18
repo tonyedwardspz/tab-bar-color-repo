@@ -5,6 +5,7 @@
     <MauiVersion Condition="'$(MauiVersion)' == '' and '$(ReproFrameworkVersion)' == '11.0'">11.0.0</MauiVersion>
     <MauiVersion Condition="'$(MauiVersion)' == '' and '$(ReproFrameworkVersion)' == '10.0'">10.0.20</MauiVersion>
     <ReproHost Condition="'$(ReproHost)' == ''">Shell</ReproHost>
+    <IconLoadDelayMs Condition="'$(IconLoadDelayMs)' == ''">1800</IconLoadDelayMs>
     <DefineConstants Condition="'$(ReproHost)' == 'TabbedPage'">$(DefineConstants);TABBED_PAGE</DefineConstants>
     <TargetFrameworks>net$(ReproFrameworkVersion)-android</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net$(ReproFrameworkVersion)-windows10.0.19041.0</TargetFrameworks>
@@ -32,6 +33,7 @@
     <MauiFont Include="Resources/Fonts/*" />
   </ItemGroup>
   <ItemGroup>
+    <AssemblyMetadata Include="IconLoadDelayMs" Value="$(IconLoadDelayMs)" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
   </ItemGroup>
   <Target Name="ValidateReproHost" BeforeTargets="PrepareForBuild">

@@ -44,6 +44,7 @@ public class ReproPage : ContentPage
                     new Label { Text = "TAB ICON TINT", FontSize = 12, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#64748B") },
                     new Label { Text = "Orange on the first frame?", FontSize = 28, FontAttributes = FontAttributes.Bold },
                     new Label { Text = "Inspect the selected Home icon before touching the tab bar. Then switch tabs and return to Home." },
+                    new Label { Text = $"Timing experiment: Home icon load delayed {ReproTiming.IconLoadDelayMs} ms on Android. Wait for it to appear before navigating.", FontSize = 14 },
                     new Border
                     {
                         BackgroundColor = Colors.White,
@@ -74,6 +75,14 @@ public class ReproPage : ContentPage
             }
         };
     }
+}
+
+internal static class ReproTiming
+{
+    public static int IconLoadDelayMs { get; } = int.TryParse(
+        typeof(App).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(attribute => attribute.Key == "IconLoadDelayMs")?.Value,
+        out var delay) ? Math.Max(0, delay) : 0;
 }
 
 public sealed class DetailPage : ContentPage

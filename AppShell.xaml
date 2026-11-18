@@ -11,11 +11,23 @@
             Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
             Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
             Shell.TabBarDisabledColor="{StaticResource Gray300}">
-        <ShellContent Title="Home" Icon="tab_home.png" Route="home"
-                      ContentTemplate="{DataTemplate local:HomePage}" />
-        <ShellContent Title="Activity" Icon="tab_activity.png" Route="activity"
-                      ContentTemplate="{DataTemplate local:ActivityPage}" />
-        <ShellContent Title="Settings" Icon="tab_settings.png" Route="settings"
-                      ContentTemplate="{DataTemplate local:SettingsPage}" />
+        <ShellContent Title="Home" Route="home"
+                      ContentTemplate="{DataTemplate local:HomePage}">
+            <ShellContent.Icon>
+                <local:DelayedTabIconSource File="tab_home.png" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Activity" Route="activity"
+                      ContentTemplate="{DataTemplate local:ActivityPage}">
+            <ShellContent.Icon>
+                <local:DelayedTabIconSource File="tab_activity.png" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent Title="Settings" Route="settings"
+                      ContentTemplate="{DataTemplate local:SettingsPage}">
+            <ShellContent.Icon>
+                <local:DelayedTabIconSource File="tab_settings.png" />
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 </Shell>
